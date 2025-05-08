@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MidJourney v7 Prompt Builder</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; background-color: #f5f5f5; }
+        h1 { text-align: center; color: #2c3e50; }
+        .section { background: white; border-radius: 8px; padding: 15px; margin-bottom: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        
+        .ratio-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 15px; margin: 15px 0; }
+        .ratio-option { display: flex; flex-direction: column; align-items: center; cursor: pointer; padding: 10px; border: 2px solid #eee; border-radius: 4px; transition: all 0.2s; }
+        .ratio-option.active { border-color: #3498db; background: #f0f8ff; }
+        .ratio-visual { width: 100px; height: 100px; background: #3498db; opacity: 0.7; display: flex; justify-content: center; align-items: center; color: white; }
+        .ratio-1-1 { width: 100px; height: 100px; aspect-ratio: 1/1; }
+        .ratio-4-3 { width: 100px; height: 75px; aspect-ratio: 4/3; }
+        .ratio-16-9 { width: 100px; height: 60px; aspect-ratio: 16/9; }
+        .ratio-2-3 { width: 66px; height: 100px; aspect-ratio: 2/3; }
+        .ratio-3-2 { width: 100px; height: 40px; aspect-ratio: 7/3; }
+        
+        input[type="text"], textarea { width: 100%; padding: 8px; margin: 5px 0 10px 0; border: 1px solid #ddd; border-radius: 4px; }
+        button { background: #3498db; color: white; border: none; padding: 10px 15px; border-radius: 4px; cursor: pointer; margin: 5px; }
+        #generatedPrompt { background: #e8f4fc; padding: 15px; border-radius: 8px; margin-top: 20px; white-space: pre-wrap; }
+    </style>
+</head>
+<body>
+    <h1>MidJourney v7 Prompt Worksheet</h1>
+  
+  [Style], [Subject], [Setting], [Composition], [Lighting], [Additional Info] --ar [aspect ratio] --style raw --v 6.0 --s [stylize value]
+  <br>
+  </br>
+
+    <!-- Medium and Style -->
+    <div class="section">
+        <h2>1. Medium and Style</h2>
+        <input type="text" id="medium" value="An oil painting" oninput="generatePrompt()">
+        <input type="text" id="style" value="in the style of an old master painting" oninput="generatePrompt()">
+    </div>
+    <!-- Subject -->
+    <div class="section">
+        <h2>2. Subject: Central figure or object, including unique traits.</h2>
+        <input type="text" id="subject" value="a young samurai with a red scarf and a broken katana" oninput="generatePrompt()">
+    </div>
+    <!-- Setting -->
+    <div class="section">
+        <h2>3. Setting: The environment or background.</h2>
+        <input type="text" id="setting" value="in a snowy bamboo forest at dusk" oninput="generatePrompt()">
+    </div>
+    <!-- Composition -->
+    <div class="section">
+        <h2>4. Composition: How the scene is framed</h2>
+        <input type="text" id="composition" value="low-angle close-up" oninput="generatePrompt()">
+    </div>
+  wide shot, medium shot, close-up, extreme close-up, over-the-shoulder, point-of-view, two shot, tracking, bird's eye, worm's eye, dutch angle, isometric
+ <br>
+ </br>
+    <!-- Lighting -->
+    <div class="section">
+        <h2>5. Lighting: Tone/mood created by light</h2>
+        <input type="text" id="lighting" value="soft backlight with ambient fog" oninput="generatePrompt()">
+    </div>
+    <!-- Additional Info -->
+    <div class="section">
+        <h2>6. Additional Info: Any secondary details that enrich the prompt</h2>
+        <input type="text" id="additional" value="looses brush strokes, expressive" oninput="generatePrompt()">
+    </div>
+
+    <h2> Load images and Include image, style --sw (0 - 100), or omni prompts --ow (0 - 400):</h2>
+  
+    <!-- Aspect Ratio -->
+    <div class="section">
+        <h2>5. Aspect Ratio</h2>
+        <div class="ratio-grid">
+            <div class="ratio-option active" onclick="selectRatio('1:1')">
+                <div class="ratio-visual ratio-1-1">1:1</div>
+                <small>Square</small>
+            </div>
+            <div class="ratio-option" onclick="selectRatio('4:3')">
+                <div class="ratio-visual ratio-4-3">4:3</div>
+                <small>Standard</small>
+            </div>
+            <div class="ratio-option" onclick="selectRatio('16:9')">
+                <div class="ratio-visual ratio-16-9">16:9</div>
+                <small>Widescreen</small>
+            </div>
+            <div class="ratio-option" onclick="selectRatio('2:3')">
+                <div class="ratio-visual ratio-2-3">2:3</div>
+                <small>Portrait</small>
+            </div>
+            <div class="ratio-option" onclick="selectRatio('7:3')">
+                <div class="ratio-visual ratio-3-2">7:3</div>
+                <small>Cinematic</small>
+            </div>
+        </div>
+        <div style="margin-top: 15px;">
+            <input type="text" id="custom-ar" placeholder="Custom ratio (e.g., 5:4)" style="width: 150px;">
+            <button onclick="applyCustomRatio()">Apply Custom</button>
+        </div>
+    </div>
+
+    <!-- Technical Settings -->
+    <div class="section">
+        <h2>6. Technical Settings</h2>
+        <div style="display: flex; gap: 15px; align-items: center;">
+            <div>
+                <label>Stylization:</label>
+                <select id="stylization" onchange="generatePrompt()">
+                    <option value="--stylize 0">None (0)</option>
+                    <option value="--stylize 100" selected>Low (100)</option>
+                    <option value="--stylize 500">Medium (500)</option>
+                    <option value="--stylize 800">High (800)</option>
+                </select>
+            </div>
+            <div>
+                <label>Chaos:</label>
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <input type="range" id="chaos" min="1" max="100" value="1" 
+                           oninput="document.getElementById('chaosValue').textContent = this.value; generatePrompt()">
+                    <span id="chaosValue">1</span>
+                </div>
+            </div>
+            <div>
+                <label>Wierd:</label>
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <input type="range" id="wierd" min="1" max="1000" value="1" 
+                           oninput="document.getElementById('wierdValue').textContent = this.value; generatePrompt()">
+                    <span id="wierdValue">1</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Output -->
+    <div id="generatedPrompt"></div>
+    <button onclick="copyPrompt()">Copy to Clipboard</button>
+
+    <script>
+        let currentAR = "--ar 1:1";
+        
+        // Aspect Ratio Functions
+        function selectRatio(ratio) {
+            currentAR = `--ar ${ratio}`;
+            document.querySelectorAll('.ratio-option').forEach(el => el.classList.remove('active'));
+            event.target.closest('.ratio-option').classList.add('active');
+            generatePrompt();
+        }
+
+        function applyCustomRatio() {
+            const customVal = document.getElementById('custom-ar').value;
+            if (customVal.match(/^\d+:\d+$/)) {
+                currentAR = `--ar ${customVal}`;
+                generatePrompt();
+            }
+        }
+
+        // Main Generator
+        function generatePrompt() {
+            const parts1 = [
+                document.getElementById('medium').value,
+                document.getElementById('style').value,
+              
+            ].filter(Boolean).join(' ');
+            
+            const parts2 = [
+                document.getElementById('subject').value,
+                document.getElementById('setting').value,
+                document.getElementById('composition').value,
+                document.getElementById('lighting').value,
+                document.getElementById('additional').value,
+
+            ].filter(Boolean).join(', ');
+
+            const params = [
+                currentAR,
+                document.getElementById('stylization').value,
+                `--c ${document.getElementById('chaos').value}`,
+                `--w ${document.getElementById('wierd').value}`,
+                `--raw`
+                
+            ].join(' ');
+
+            document.getElementById('generatedPrompt').textContent = `${parts1}, ${parts2} ${params}`;
+        }
+
+        // Copy Function
+        function copyPrompt() {
+            navigator.clipboard.writeText(document.getElementById('generatedPrompt').textContent);
+        }
+
+        // Initial Generation
+        generatePrompt();
+    </script>
+</body>
+</html>
