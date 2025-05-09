@@ -5,23 +5,133 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MidJourney v7 Prompt Builder</title>
     <style>
-        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; background-color: #f5f5f5; }
-        h1 { text-align: center; color: #2c3e50; }
-        .section { background: white; border-radius: 8px; padding: 15px; margin-bottom: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        
-        .ratio-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 15px; margin: 15px 0; }
-        .ratio-option { display: flex; flex-direction: column; align-items: center; cursor: pointer; padding: 10px; border: 2px solid #eee; border-radius: 4px; transition: all 0.2s; }
-        .ratio-option.active { border-color: #3498db; background: #f0f8ff; }
-        .ratio-visual { width: 100px; height: 100px; background: #3498db; opacity: 0.7; display: flex; justify-content: center; align-items: center; color: white; }
-        .ratio-1-1 { width: 100px; height: 100px; aspect-ratio: 1/1; }
-        .ratio-4-3 { width: 100px; height: 75px; aspect-ratio: 4/3; }
-        .ratio-16-9 { width: 100px; height: 60px; aspect-ratio: 16/9; }
-        .ratio-2-3 { width: 66px; height: 100px; aspect-ratio: 2/3; }
-        .ratio-3-2 { width: 100px; height: 40px; aspect-ratio: 7/3; }
-        
-        input[type="text"], textarea { width: 100%; padding: 8px; margin: 5px 0 10px 0; border: 1px solid #ddd; border-radius: 4px; }
-        button { background: #3498db; color: white; border: none; padding: 10px 15px; border-radius: 4px; cursor: pointer; margin: 5px; }
-        #generatedPrompt { background: #e8f4fc; padding: 15px; border-radius: 8px; margin-top: 20px; white-space: pre-wrap; }
+body {
+    font-family: Arial, sans-serif;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #1e1e2f;
+    color: #a9a9a9;
+}
+
+/* Headings */
+h1, h2, h3, h4, h5, h6 {
+    color: #a9a9a9;
+}
+
+/* Paragraphs, list items, labels, and general text */
+p, li, label, span, strong, em, small {
+    color: #8fbc8f;
+}
+
+/* Section background containers */
+.section {
+    background: #2a2a40;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+}
+
+/* Grid and visual blocks */
+.ratio-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 15px;
+    margin: 15px 0;
+}
+
+.ratio-option {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    padding: 10px;
+    border: 2px solid #3b3b5a;
+    border-radius: 4px;
+    background: #353552;
+    transition: all 0.2s;
+}
+
+.ratio-option.active {
+    border-color: #5daeff;
+    background: #3d4d6f;
+}
+
+.ratio-visual {
+    width: 100px;
+    height: 100px;
+    background: #5daeff;
+    opacity: 0.9;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #ffffff;
+}
+
+/* Aspect ratio helpers */
+.ratio-1-1 { width: 100px; height: 100px; aspect-ratio: 1/1; }
+.ratio-4-3 { width: 100px; height: 75px; aspect-ratio: 4/3; }
+.ratio-16-9 { width: 100px; height: 60px; aspect-ratio: 16/9; }
+.ratio-2-3 { width: 66px; height: 100px; aspect-ratio: 2/3; }
+.ratio-3-2 { width: 100px; height: 40px; aspect-ratio: 7/3; }
+
+/* Inputs and text areas */
+input[type="text"],
+textarea {
+    width: 100%;
+    padding: 8px;
+    margin: 5px 0 10px 0;
+    border: 1px solid #555;
+    border-radius: 4px;
+    background: #2e2e42;
+    color: #f0f0f0;
+}
+
+input::placeholder,
+textarea::placeholder {
+    color: #888;
+}
+
+/* Buttons */
+button {
+    background: #5daeff;
+    color: #1b1b2d;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin: 5px;
+    font-weight: bold;
+    transition: background 0.2s ease;
+}
+
+button:hover {
+    background: #7bbdff;
+}
+
+/* Generated prompt area */
+#generatedPrompt {
+    background: #2f3a55;
+    padding: 15px;
+    border-radius: 8px;
+    margin-top: 20px;
+    white-space: pre-wrap;
+    color: #dde4f3;
+}
+
+/* Links */
+a {
+    color: #7bbdff;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+a:hover {
+    text-decoration: underline;
+    color: #a8d3ff;
+}
+
     </style>
 </head>
 <body>
@@ -52,7 +162,7 @@
         <h2>4. Composition: How the scene is framed</h2>
         <input type="text" id="composition" value="low-angle close-up" oninput="generatePrompt()">
     </div>
-   <a href="https://nofilmschool.com/camera-angles" target="_blank" rel="noopener noreferrer">Camera Angles - No Film School</a>
+  <a href="https://nofilmschool.com/camera-angles">Camera Angles - No Film School</a>
   wide shot, medium shot, close-up, extreme close-up, over-the-shoulder, point-of-view, two shot, tracking, bird's eye, worm's eye, dutch angle, isometric
  <br>
  </br>
@@ -64,7 +174,7 @@
     <!-- Additional Info -->
     <div class="section">
         <h2>6. Additional Info: Any secondary details that enrich the prompt</h2>
-        <input type="text" id="additional" value="loose brush strokes, expressive" oninput="generatePrompt()">
+        <input type="text" id="additional" value="loose expressive brush strokes" oninput="generatePrompt()">
     </div>
 
     <h2> Load images and Include image, style --sw (0 - 100), or omni prompts --ow (0 - 400):</h2>
